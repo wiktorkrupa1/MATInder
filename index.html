@@ -8,8 +8,10 @@
 <title>MATInder</title>
 
 
-<link rel="manifest" href="./manifest.json">
-<link rel="apple-touch-icon" href="./images/icon-192.png">
+<!-- link do manifest.json -->
+<link rel="manifest" href="manifest.json">
+<!-- ikona dla iOS (możesz dodać swój plik) -->
+<link rel="apple-touch-icon" href="images/icon-192.png">
 
 
 <style>
@@ -86,5 +88,182 @@ constructor(name, age, desc, images){
 this.name = name;
 this.age = age;
 this.desc = desc;
+this.images = images; // tablica urli
+this.currentImage = 0;
+}
+nextImage(){
+if(this.images.length <= 1) return;
+this.currentImage = (this.currentImage + 1) % this.images.length;
+}
+prevImage(){
+if(this.images.length <= 1) return;
+this.currentImage = (this.currentImage - 1 + this.images.length) % this.images.length;
+}
+currentImgUrl(){
+return this.images[this.currentImage];
 }
 }
+// ---- Zahardcodowane profile ----
+const profiles = [
+new Profile('Wiktor', 22, 'Opis 1', [
+'https://picsum.photos/200/300',
+'https://picsum.photos/200/300',
+'https://picsum.photos/200/300'
+]),
+new Profile('Wiktor', 22, 'Opis 2', [
+'https://picsum.photos/200/300',
+'https://picsum.photos/200/300'
+]),
+new Profile('Wiktor ', 22, 'Ratuje rośliny przed suszą. W wolnym czasie koktajle.', [
+'https://picsum.photos/200/300'
+])
+];
+
+// ---- Elementy DOM ----
+const deck = document.getElementById('deck');
+const nameEl = document.getElementById('name');
+const descEl = document.getElementById('desc');
+
+
+// ---- Renderowanie stosu kart ----
+function renderStack(){
+deck.innerHTML = '';
+// odwrotnie — ostatni profil na spodzie
+for(let i = profiles.length -1; i >= 0; i--){
+const p = profiles[i];
+const card = createCard(p);
+// lekkie przesuniecie dla lepszego efektu warstw
+const offset = (profiles.length -1 - i) * 8;
+card.style.transform = `translateY(${offset}px)`;
+deck.appendChild(card);
+}
+updateInfo();
+}
+
+
+
+function updateInfo(){
+if(profiles.length === 0){
+nameEl.textContent = 'Brak profili';
+descEl.textContent = 'To już koniec — odśwież stronę, aby załadować ponownie.';
+return;
+}
+const top = profiles[0];
+nameEl.textContent = `${top.name}, ${top.age}`;
+descEl.textContent = top.desc;
+}
+
+// ---- Tworzenie pojedynczej karty ----
+function createCard(profile){
+const el = document.createElement('div');
+el.className = 'card';
+el.innerHTML = `
+<img src="${profile.currentImgUrl()}" alt="${profile.name}" draggable="false">
+<div class="stamp like">LIKE</div>
+<div class="stamp nope">NOPE</div>
+`;
+
+
+// zamiana zdjęcia po tapnięciu w lewą/prawą połowę
+el.addEventListener('click', (ev) => {
+// ignoruj jeśli był drag
+if(el._isDragging) return;
+const rect = el.getBoundingClientRect();
+const x = ev.clientX - rect.left;
+if(x > rect.width / 2){
+profile.nextImage();
+} else {
+profile.prevImage();
+}
+const img = el.querySelector('img');
+img.src = profile.currentImgUrl();
+updateInfo();
+});
+
+// obsługa dotyku / przesunięć
+let startX=0, startY=0, currentX=0, currentY=0, isPointerDown=false;
+
+
+function onPointerDown(e){
+isPointerDown = true;
+el._isDragging = false;
+startX = e.touches ? e.touches[0].clientX : e.clientX;
+startY = e.touches ? e.touches[0].clientY : e.clientY;
+el.style.transition = 'none';
+}
+function onPointerMove(e){
+if(!isPointerDown) return;
+const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+currentX = clientX - startX;
+currentY = clientY - startY;
+if(Math.abs(currentX) > 5) el._isDragging = true;
+const rot = currentX / 12;
+el.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
+// overlayy
+const likeStamp = el.querySelector('.stamp.like');
+const nopeStamp = el.querySelector('.stamp.nope');
+if(currentX > 0){
+likeStamp.classList.add('visible');
+likeStamp.style.opacity = Math.min(1, Math.abs(currentX) / 120);
+nopeStamp.classList.remove('visible');
+} else if(currentX < 0){
+nopeStamp.classList.add('visible');
+nopeStamp.style.opacity = Math.min(1, Math.abs(currentX) / 120);
+likeStamp.classList.remove('visible');
+} else {
+likeStamp.classList.remove('visible');
+nopeStamp.classList.remove('visible');
+}
+}
+
+function onPointerUp(e){
+if(!isPointerDown) return;
+isPointerDown = false;
+el.style.transition = '';
+const threshold = el.clientWidth * 0.28; // próg do akcji
+if(Math.abs(currentX) > threshold){
+// wykonaj akcję
+const toRight = currentX > 0;
+const endX = (toRight ? el.clientWidth * 1.4 : -el.clientWidth * 1.4);
+el.style.transition = 'transform .45s cubic-bezier(.22,.9,.26,1), opacity .3s';
+el.style.transform = `translate(${endX}px, ${currentY}px) rotate(${toRight?30:-30}deg)`;
+el.classList.add('removed');
+// małe opóźnienie, żeby animacja zdążyła
+setTimeout(() => {
+    // usuń profil z tablicy
+    if (profiles[0] && profiles[0] === profile) {
+        profiles.shift();
+    } else {
+        const idx = profiles.indexOf(profile);
+        if (idx > -1) profiles.splice(idx, 1);
+    }
+    renderStack();
+}, 300);
+
+} else {
+    // jeśli przesunięcie było za małe – wróć do pozycji startowej
+    el.style.transform = '';
+    const likeStamp = el.querySelector('.stamp.like');
+    const nopeStamp = el.querySelector('.stamp.nope');
+    likeStamp.classList.remove('visible');
+    nopeStamp.classList.remove('visible');
+}
+currentX = 0;
+currentY = 0;
+}
+
+// podpięcie eventów dotyku/myszy
+el.addEventListener('mousedown', onPointerDown);
+el.addEventListener('touchstart', onPointerDown);
+el.addEventListener('mousemove', onPointerMove);
+el.addEventListener('touchmove', onPointerMove);
+el.addEventListener('mouseup', onPointerUp);
+el.addEventListener('touchend', onPointerUp);
+
+return el;
+}
+
+// ---- Inicjalizacja ----
+renderStack();
+</script>
