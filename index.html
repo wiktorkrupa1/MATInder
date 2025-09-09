@@ -182,124 +182,128 @@ return this.images[this.currentImage];
 }
 // ---- Zahardcodowane profile ----
 // ---- Profile Wiktora ----
-const profiles = [
+const allProfiles  = [
   new Profile("Wiktor", 22, "186 cm. Lubię gotować dla kogoś, a nie tylko dla siebie 💕", [
-    "images/IMG_0527.png",
-    "images/IMG_0669.png",
-    "images/IMG_0697.png"
+    "images/optimized/IMG_0527.jpg",
+    "images/optimized/IMG_0669.jpg",
+    "images/optimized/IMG_0697.jpg"
   ]),
   new Profile("Wiktor", 22, "Romantyk, co wierzy w miłość od pierwszego swipe’a 🌹", [
-    "images/IMG_0803.png",
-    "images/IMG_1650.JPG"
+    "images/optimized/IMG_0803.jpg",
+    "images/optimized/IMG_1650.jpg"
   ]),
   new Profile("Wiktor", 22, "Nie jestem fotografem, ale potrafię Cię sobie wyobrazić obok 📸", [
-    "images/IMG_1663.JPG",
-    "images/IMG_1667.png",
-    "images/IMG_1822.png"
+    "images/optimized/IMG_1663.jpg",
+    "images/optimized/IMG_1667.jpg",
+    "images/optimized/IMG_1822.jpg"
   ]),
   new Profile("Wiktor", 22, "Mam 186 cm wzrostu i zero pomysłu na opis 🤷‍♂️", [
-    "images/IMG_1842.png",
-    "images/IMG_2103.png"
+    "images/optimized/IMG_1842.jpg",
+    "images/optimized/IMG_2103.jpg"
   ]),
   new Profile("Wiktor", 22, "Szukam kogoś do wspólnego binge-watchingu Netflixa 🍿", [
-    "images/IMG_2126.png",
-    "images/IMG_2140.png",
-    "images/IMG_2176.png"
+    "images/optimized/IMG_2126.jpg",
+    "images/optimized/IMG_2140.jpg",
+    "images/optimized/IMG_2176.jpg"
   ]),
   new Profile("Wiktor", 22, "Powiedz mi, że też kochasz podróże, a już mamy randkę ✈️", [
-    "images/IMG_2240.png",
-    "images/IMG_2336.png"
+    "images/optimized/IMG_2240.jpg",
+    "images/optimized/IMG_2336.jpg"
   ]),
   new Profile("Wiktor", 22, "Uwielbiam kawę o poranku i dobre memy wieczorem ☕😂", [
-    "images/IMG_2344.png",
-    "images/IMG_2346.png",
-    "images/IMG_2382.png"
+    "images/optimized/IMG_2344.jpg",
+    "images/optimized/IMG_2346.jpg",
+    "images/optimized/IMG_2382.jpg"
   ]),
   new Profile("Wiktor", 22, "Jeśli umiesz tańczyć – nauczysz mnie? 💃🕺", [
-    "images/IMG_2388.png",
-    "images/IMG_2402.png"
+    "images/optimized/IMG_2388.jpg",
+    "images/optimized/IMG_2402.jpg"
   ]),
   new Profile("Wiktor", 22, "Mój pies mówi, że jestem fajny 🐶", [
-    "images/IMG_2448.png",
-    "images/IMG_2497.png",
-    "images/IMG_2798.png"
+    "images/optimized/IMG_2448.jpg",
+    "images/optimized/IMG_2497.jpg",
+    "images/optimized/IMG_2798.jpg"
   ]),
   new Profile("Wiktor", 22, "Pasjonat muzyki – ale śpiewam tylko pod prysznicem 🎶", [
-    "images/IMG_2817.png",
-    "images/IMG_2894.png"
+    "images/optimized/IMG_2817.jpg",
+    "images/optimized/IMG_2894.jpg"
   ]),
   new Profile("Wiktor", 22, "Moje hobby: fotografia, podróże i zdobywanie serca Mati ❤️", [
-    "images/IMG_2897.png",
-    "images/IMG_2905.JPG",
-    "images/IMG_2958.png"
+    "images/optimized/IMG_2897.jpg",
+    "images/optimized/IMG_2905.jpg",
+    "images/optimized/IMG_2958.jpg"
   ]),
   new Profile("Wiktor", 22, "Swipe right, jeśli chcesz wygrać darmową randkę 🍕", [
-    "images/IMG_2968.png",
-    "images/IMG_2992.png"
+    "images/optimized/IMG_2968.jpg",
+    "images/optimized/IMG_2992.jpg"
   ]),
   new Profile("Wiktor", 22, "Czasem filozofuję, częściej żartuję 😉", [
-    "images/IMG_2996.png",
-    "images/IMG_3327.png",
-    "images/IMG_3366.png"
+    "images/optimized/IMG_2996.jpg",
+    "images/optimized/IMG_3327.jpg",
+    "images/optimized/IMG_3366.jpg"
   ]),
   new Profile("Wiktor", 22, "Introvert wśród ludzi, extrovert z Tobą 💫", [
-    "images/IMG_3386.png",
-    "images/IMG_3399.png"
+    "images/optimized/IMG_3386.jpg",
+    "images/optimized/IMG_3399.jpg"
   ]),
   new Profile("Wiktor", 22, "Dla znajomych Wicio, dla Ciebie może ktoś więcej 💕", [
-    "images/IMG_3452.png",
-    "images/IMG_3481.JPG",
-    "images/IMG_3680.png"
+    "images/optimized/IMG_3452.jpg",
+    "images/optimized/IMG_3481.jpg",
+    "images/optimized/IMG_3680.jpg"
   ]),
   new Profile("Wiktor", 22, "Ktoś powiedział pizza? Już biegnę 🍕", [
-    "images/IMG_3848.png",
-    "images/IMG_3926.JPG"
+    "images/optimized/IMG_3848.jpg",
+    "images/optimized/IMG_3926.jpg"
   ]),
   new Profile("Wiktor", 22, "Jeśli się zgubisz – znajdę Cię (mam dobry GPS 🧭)", [
-    "images/IMG_4014.JPG",
-    "images/IMG_4026.png",
-    "images/IMG_4080.JPG"
+    "images/optimized/IMG_4014.jpg",
+    "images/optimized/IMG_4026.jpg",
+    "images/optimized/IMG_4080.jpg"
   ]),
   new Profile("Wiktor", 22, "Moim talentem jest robienie głupich min 😂", [
-    "images/IMG_4087.png",
-    "images/IMG_4145.jpg"
+    "images/optimized/IMG_4087.jpg",
+    "images/optimized/IMG_4145.jpg"
   ]),
   new Profile("Wiktor", 22, "Chcę kogoś, kto będzie moją ulubioną osobą do wysyłania memów 📲", [
-    "images/IMG_4156.png",
-    "images/IMG_4534.JPG",
-    "images/IMG_4774.PNG"
+    "images/optimized/IMG_4156.jpg",
+    "images/optimized/IMG_4534.jpg",
+    "images/optimized/IMG_4774.jpg"
   ]),
   new Profile("Wiktor", 22, "Mówią, że dużo się uśmiecham – to prawda 😁", [
-    "images/IMG_4819.JPG",
-    "images/IMG_4867.png"
+    "images/optimized/IMG_4819.jpg",
+    "images/optimized/IMG_4867.jpg"
   ]),
   new Profile("Wiktor", 22, "Zawsze znajdę czas na spacer i dobrą kawę 🚶‍♂️☕", [
-    "images/IMG_4931.png",
-    "images/IMG_4944.png",
-    "images/IMG_5021.png"
+    "images/optimized/IMG_4931.jpg",
+    "images/optimized/IMG_4944.jpg",
+    "images/optimized/IMG_5021.jpg"
   ]),
   new Profile("Wiktor", 22, "Nie szukam przygód – szukam Mati ❤️", [
-    "images/IMG_5095.png",
-    "images/IMG_5134.png"
+    "images/optimized/IMG_5095.jpg",
+    "images/optimized/IMG_5134.jpg"
   ]),
   new Profile("Wiktor", 22, "Świat jest lepszy, gdy się śmiejesz 😁", [
-    "images/IMG_5172.png",
-    "images/IMG_5322.png",
-    "images/IMG_5323.png"
+    "images/optimized/IMG_5172.jpg",
+    "images/optimized/IMG_5322.jpg",
+    "images/optimized/IMG_5323.jpg"
   ]),
   new Profile("Wiktor", 22, "W wolnym czasie – gitara i trochę sportu 🎸⚽", [
-    "images/IMG_5424.png",
-    "images/IMG_5435.png"
+    "images/optimized/IMG_5424.jpg",
+    "images/optimized/IMG_5435.jpg"
   ]),
   new Profile("Wiktor", 22, "Swipe right, a pokażę Ci najlepsze memy w internecie 📲", [
-    "images/IMG_5483.png",
-    "images/IMG_5527.JPG",
-    "images/IMG_5629.png"
+    "images/optimized/IMG_5483.jpg",
+    "images/optimized/IMG_5527.jpg",
+    "images/optimized/IMG_5629.jpg"
   ]),
   new Profile("Wiktor", 22, "Romantyk incognito 🌌", [
-    "images/IMG_5828.png"
+    "images/optimized/IMG_5828.jpg"
   ])
 ];
+
+
+let profiles = [];
+const batchSize = 5; // ile kart ładować naraz
 
 
 // ---- Elementy DOM ----
@@ -307,6 +311,11 @@ const deck = document.getElementById('deck');
 const nameEl = document.getElementById('name');
 const descEl = document.getElementById('desc');
 
+function loadNextBatch() {
+  const next = allProfiles.splice(0, batchSize);
+  profiles.push(...next);
+  renderStack();
+}
 
 // ---- Renderowanie stosu kart ----
 function renderStack(){
@@ -341,9 +350,9 @@ function createCard(profile){
 const el = document.createElement('div');
 el.className = 'card';
 el.innerHTML = `
-<img src="${profile.currentImgUrl()}" alt="${profile.name}" draggable="false">
-<div class="stamp like">LIKE</div>
-<div class="stamp nope">NOPE</div>
+  <img src="${profile.currentImgUrl()}" alt="${profile.name}" draggable="false" loading="lazy">
+  <div class="stamp like">LIKE</div>
+  <div class="stamp nope">NOPE</div>
 `;
 
 
@@ -359,6 +368,7 @@ profile.nextImage();
 profile.prevImage();
 }
 const img = el.querySelector('img');
+img.loading = "lazy"; 
 img.src = profile.currentImgUrl();
 updateInfo();
 });
@@ -414,15 +424,20 @@ el.style.transform = `translate(${endX}px, ${currentY}px) rotate(${toRight?30:-3
 el.classList.add('removed');
 // małe opóźnienie, żeby animacja zdążyła
 setTimeout(() => {
-    // usuń profil z tablicy
-    if (profiles[0] && profiles[0] === profile) {
-        profiles.shift();
-    } else {
-        const idx = profiles.indexOf(profile);
-        if (idx > -1) profiles.splice(idx, 1);
-    }
+  if (profiles[0] && profiles[0] === profile) {
+    profiles.shift();
+  } else {
+    const idx = profiles.indexOf(profile);
+    if (idx > -1) profiles.splice(idx, 1);
+  }
+
+  if (profiles.length === 0 && allProfiles.length > 0) {
+    loadNextBatch(); // doładuj kolejne karty
+  } else {
     renderStack();
+  }
 }, 300);
+
 
 } else {
     // jeśli przesunięcie było za małe – wróć do pozycji startowej
@@ -448,7 +463,7 @@ return el;
 }
 
 // ---- Inicjalizacja ----
-renderStack();
+loadNextBatch();
 
 document.getElementById('nopeBtn').addEventListener('click', () => {
   if(profiles.length === 0) return;
