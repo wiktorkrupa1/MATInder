@@ -11,7 +11,7 @@
 <!-- link do manifest.json -->
 <link rel="manifest" href="manifest.json">
 <!-- ikona dla iOS (możesz dodać swój plik) -->
-<link rel="apple-touch-icon" href="images/icon-192.png">
+<link rel="apple-touch-icon" href="images/icon.jpg">
 
 
 <style>
@@ -30,7 +30,7 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -137,8 +137,8 @@ body{background:linear-gradient(180deg,#f4f6f9,#fff)}
 <body>
 <div id="app">
 <div style="width:92vw;max-width:420px;display:flex;justify-content:space-between;align-items:center;padding:0 0 6px 0;box-sizing:border-box;">
-<h1 style="margin:0;font-size:18px">MATInder</h1>
-<div style="font-size:12px;color:#666">Żartoborna wersja</div>
+<h1 style="margin:0;font-size:18px">maTINDER</h1>
+<div style="font-size:12px;color:#666">❤️</div>
 </div>
 
 
@@ -146,10 +146,7 @@ body{background:linear-gradient(180deg,#f4f6f9,#fff)}
 
 
 <div class="info" id="info">
-<div class="controls">
-  <button class="btn" id="nopeBtn">❌</button>
-  <button class="btn" id="likeBtn">❤️</button>
-</div>
+
 <div class="title" id="name">—</div>
 <div class="desc" id="desc">Wczytywanie...</div>
 </div>
@@ -184,20 +181,126 @@ return this.images[this.currentImage];
 }
 }
 // ---- Zahardcodowane profile ----
+// ---- Profile Wiktora ----
 const profiles = [
-new Profile('Wiktor', 22, 'Opis 1', [
-'https://picsum.photos/200/300',
-'https://picsum.photos/200/300',
-'https://picsum.photos/200/300'
-]),
-new Profile('Wiktor', 22, 'Opis 2', [
-'https://picsum.photos/200/300',
-'https://picsum.photos/200/300'
-]),
-new Profile('Wiktor ', 22, 'Ratuje rośliny przed suszą. W wolnym czasie koktajle.', [
-'https://picsum.photos/200/300'
-])
+  new Profile("Wiktor", 22, "186 cm. Lubię gotować dla kogoś, a nie tylko dla siebie 💕", [
+    "images/IMG_0527.png",
+    "images/IMG_0669.png",
+    "images/IMG_0697.png"
+  ]),
+  new Profile("Wiktor", 22, "Romantyk, co wierzy w miłość od pierwszego swipe’a 🌹", [
+    "images/IMG_0803.png",
+    "images/IMG_1650.JPG"
+  ]),
+  new Profile("Wiktor", 22, "Nie jestem fotografem, ale potrafię Cię sobie wyobrazić obok 📸", [
+    "images/IMG_1663.JPG",
+    "images/IMG_1667.png",
+    "images/IMG_1822.png"
+  ]),
+  new Profile("Wiktor", 22, "Mam 186 cm wzrostu i zero pomysłu na opis 🤷‍♂️", [
+    "images/IMG_1842.png",
+    "images/IMG_2103.png"
+  ]),
+  new Profile("Wiktor", 22, "Szukam kogoś do wspólnego binge-watchingu Netflixa 🍿", [
+    "images/IMG_2126.png",
+    "images/IMG_2140.png",
+    "images/IMG_2176.png"
+  ]),
+  new Profile("Wiktor", 22, "Powiedz mi, że też kochasz podróże, a już mamy randkę ✈️", [
+    "images/IMG_2240.png",
+    "images/IMG_2336.png"
+  ]),
+  new Profile("Wiktor", 22, "Uwielbiam kawę o poranku i dobre memy wieczorem ☕😂", [
+    "images/IMG_2344.png",
+    "images/IMG_2346.png",
+    "images/IMG_2382.png"
+  ]),
+  new Profile("Wiktor", 22, "Jeśli umiesz tańczyć – nauczysz mnie? 💃🕺", [
+    "images/IMG_2388.png",
+    "images/IMG_2402.png"
+  ]),
+  new Profile("Wiktor", 22, "Mój pies mówi, że jestem fajny 🐶", [
+    "images/IMG_2448.png",
+    "images/IMG_2497.png",
+    "images/IMG_2798.png"
+  ]),
+  new Profile("Wiktor", 22, "Pasjonat muzyki – ale śpiewam tylko pod prysznicem 🎶", [
+    "images/IMG_2817.png",
+    "images/IMG_2894.png"
+  ]),
+  new Profile("Wiktor", 22, "Moje hobby: fotografia, podróże i zdobywanie serca Mati ❤️", [
+    "images/IMG_2897.png",
+    "images/IMG_2905.JPG",
+    "images/IMG_2958.png"
+  ]),
+  new Profile("Wiktor", 22, "Swipe right, jeśli chcesz wygrać darmową randkę 🍕", [
+    "images/IMG_2968.png",
+    "images/IMG_2992.png"
+  ]),
+  new Profile("Wiktor", 22, "Czasem filozofuję, częściej żartuję 😉", [
+    "images/IMG_2996.png",
+    "images/IMG_3327.png",
+    "images/IMG_3366.png"
+  ]),
+  new Profile("Wiktor", 22, "Introvert wśród ludzi, extrovert z Tobą 💫", [
+    "images/IMG_3386.png",
+    "images/IMG_3399.png"
+  ]),
+  new Profile("Wiktor", 22, "Dla znajomych Wicio, dla Ciebie może ktoś więcej 💕", [
+    "images/IMG_3452.png",
+    "images/IMG_3481.JPG",
+    "images/IMG_3680.png"
+  ]),
+  new Profile("Wiktor", 22, "Ktoś powiedział pizza? Już biegnę 🍕", [
+    "images/IMG_3848.png",
+    "images/IMG_3926.JPG"
+  ]),
+  new Profile("Wiktor", 22, "Jeśli się zgubisz – znajdę Cię (mam dobry GPS 🧭)", [
+    "images/IMG_4014.JPG",
+    "images/IMG_4026.png",
+    "images/IMG_4080.JPG"
+  ]),
+  new Profile("Wiktor", 22, "Moim talentem jest robienie głupich min 😂", [
+    "images/IMG_4087.png",
+    "images/IMG_4145.jpg"
+  ]),
+  new Profile("Wiktor", 22, "Chcę kogoś, kto będzie moją ulubioną osobą do wysyłania memów 📲", [
+    "images/IMG_4156.png",
+    "images/IMG_4534.JPG",
+    "images/IMG_4774.PNG"
+  ]),
+  new Profile("Wiktor", 22, "Mówią, że dużo się uśmiecham – to prawda 😁", [
+    "images/IMG_4819.JPG",
+    "images/IMG_4867.png"
+  ]),
+  new Profile("Wiktor", 22, "Zawsze znajdę czas na spacer i dobrą kawę 🚶‍♂️☕", [
+    "images/IMG_4931.png",
+    "images/IMG_4944.png",
+    "images/IMG_5021.png"
+  ]),
+  new Profile("Wiktor", 22, "Nie szukam przygód – szukam Mati ❤️", [
+    "images/IMG_5095.png",
+    "images/IMG_5134.png"
+  ]),
+  new Profile("Wiktor", 22, "Świat jest lepszy, gdy się śmiejesz 😁", [
+    "images/IMG_5172.png",
+    "images/IMG_5322.png",
+    "images/IMG_5323.png"
+  ]),
+  new Profile("Wiktor", 22, "W wolnym czasie – gitara i trochę sportu 🎸⚽", [
+    "images/IMG_5424.png",
+    "images/IMG_5435.png"
+  ]),
+  new Profile("Wiktor", 22, "Swipe right, a pokażę Ci najlepsze memy w internecie 📲", [
+    "images/IMG_5483.png",
+    "images/IMG_5527.JPG",
+    "images/IMG_5629.png"
+  ]),
+  new Profile("Wiktor", 22, "Romantyk incognito 🌌", [
+    "images/IMG_5828.png"
+  ])
 ];
+
 
 // ---- Elementy DOM ----
 const deck = document.getElementById('deck');
@@ -213,9 +316,8 @@ for(let i = profiles.length -1; i >= 0; i--){
 const p = profiles[i];
 const card = createCard(p);
 // lekkie przesuniecie dla lepszego efektu warstw
-const offset = (profiles.length -1 - i) * 10; // większe przesunięcie
-const scale = 1 - (profiles.length -1 - i) * 0.03; // lekka skala
-card.style.transform = `translateY(${offset}px) scale(${scale})`;
+const offset = (profiles.length -1 - i) * 1;
+card.style.transform = `translateY(${offset}px)`;
 deck.appendChild(card);
 }
 updateInfo();
