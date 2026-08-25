@@ -159,6 +159,11 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
   z-index:50;
   position:relative;
 }
+/* Gdy otwarta jest klawiatura — chowamy dolny pasek i zwalniamy miejsce,
+   które pod niego rezerwował czat, żeby pole do pisania siadło tuż nad
+   klawiaturą zamiast zostawiać pustą przestrzeń. */
+body.keyboard-open .bottomnav{display:none}
+body.keyboard-open .chat-screen{padding-bottom:0}
 .navbtn{
   position:relative;
   border:none;background:none;font-size:12px;color:#888;
@@ -1289,10 +1294,23 @@ document.getElementById('likeBtn').addEventListener('click', () => {
 // znikają pod spodem. window.visualViewport śledzi realnie widoczny obszar
 // (łącznie z paskiem adresu Safari i klawiaturą), więc na bieżąco ustawiamy
 // nią zmienną --app-h, z której korzysta #app zamiast sztywnego 100dvh.
+//
+// Dodatkowo: gdy klawiatura jest otwarta (visualViewport wyraźnie mniejszy
+// niż window.innerHeight), dodajemy klasę .keyboard-open na <body> — CSS
+// wtedy chowa dolny pasek nawigacji i zeruje zarezerwowane pod niego miejsce
+// w czacie, więc pole do pisania siada tuż nad klawiaturą. Po każdej zmianie
+// wymuszamy też window.scrollTo(0,0), bo iOS potrafi samo "podjechać" stroną
+// przy fokusowaniu inputa, zostawiając ją przewiniętą — to to cofa.
 // =========================================================================
 function setAppHeight(){
-  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  const vv = window.visualViewport;
+  const h = vv ? vv.height : window.innerHeight;
   document.documentElement.style.setProperty('--app-h', h + 'px');
+  const keyboardOpen = vv ? (window.innerHeight - vv.height) > 150 : false;
+  document.body.classList.toggle('keyboard-open', keyboardOpen);
+  window.scrollTo(0, 0);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
 }
 setAppHeight();
 window.addEventListener('resize', setAppHeight);
