@@ -1295,6 +1295,51 @@ if(window.visualViewport){
   window.visualViewport.addEventListener('scroll', setAppHeight);
 }
 
+// =========================================================================
+// TYMCZASOWY PODGLĄD DIAGNOSTYCZNY — włącz dopisując ?debug=1 do adresu.
+// Pokazuje surowe liczby z telefonu (wymiary, safe-area, nakładanie się
+// przycisków z dolnym paskiem), żeby można było zdiagnozować co faktycznie
+// dzieje się na iOS zamiast zgadywać. Nie wpływa na nic poza samym sobą.
+// =========================================================================
+if(new URLSearchParams(location.search).get('debug') === '1'){
+  const hud = document.createElement('div');
+  hud.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:10px/1.4 monospace;padding:6px 8px;white-space:pre;pointer-events:none;max-height:45vh;overflow:hidden';
+  document.body.appendChild(hud);
+
+  const safeProbe = document.createElement('div');
+  safeProbe.style.cssText = 'position:fixed;bottom:0;left:0;width:0;height:0;padding-bottom:env(safe-area-inset-bottom);visibility:hidden';
+  document.body.appendChild(safeProbe);
+
+  function updateHud(){
+    const vv = window.visualViewport;
+    const safeBottom = getComputedStyle(safeProbe).paddingBottom;
+    const appH = getComputedStyle(document.documentElement).getPropertyValue('--app-h');
+    const navh = getComputedStyle(document.documentElement).getPropertyValue('--navh');
+    const nav = document.querySelector('.bottomnav')?.getBoundingClientRect();
+    const likeBtn = document.getElementById('likeBtn')?.getBoundingClientRect();
+    const chatBar = document.querySelector('.chat-inputbar')?.getBoundingClientRect();
+    const overlapButtons = (likeBtn && nav) ? Math.round(likeBtn.bottom - nav.top) : null;
+    const chatBarVsKeyboard = (chatBar && vv) ? Math.round(chatBar.bottom - vv.height) : null;
+    hud.textContent =
+      `standalone: ${window.matchMedia('(display-mode: standalone)').matches}\n` +
+      `innerW/H: ${window.innerWidth} x ${window.innerHeight}\n` +
+      `vv W/H: ${vv ? Math.round(vv.width) : '—'} x ${vv ? Math.round(vv.height) : '—'}  offsetTop:${vv ? vv.offsetTop.toFixed(1) : '—'}\n` +
+      `--app-h: ${appH.trim()}   --navh: ${navh.trim()}\n` +
+      `safe-area-bottom: ${safeBottom}\n` +
+      `bottomnav top: ${nav ? Math.round(nav.top) : '—'} / height: ${nav ? Math.round(nav.height) : '—'}\n` +
+      `likeBtn bottom: ${likeBtn ? Math.round(likeBtn.bottom) : '—'}\n` +
+      `NAKŁADANIE przyciski/nav (>0 = zasłonięte): ${overlapButtons}\n` +
+      `pasek czatu vs klawiatura (>0 = pod klawiaturą): ${chatBarVsKeyboard}`;
+  }
+  updateHud();
+  window.addEventListener('resize', updateHud);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', updateHud);
+    window.visualViewport.addEventListener('scroll', updateHud);
+  }
+  setInterval(updateHud, 400);
+}
+
 
 // ---- Inicjalizacja ----
 loadNextBatch();
