@@ -22,13 +22,13 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
 /* --app-h jest na bieżąco aktualizowane z JS (window.visualViewport), żeby na iOS
    Safari układ realnie dopasowywał się do widocznego obszaru — także wtedy,
    gdy pokaże się klawiatura, która potrafi skłamać w zwykłym 100dvh/100vh */
-#app{height:100vh;height:var(--app-h);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;padding-bottom:var(--navh);box-sizing:border-box;position:relative;overflow:hidden}
+#app{height:100vh;height:var(--app-h);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;box-sizing:border-box;position:relative;overflow:hidden}
 
 .screen{display:none;width:100%;flex-direction:column;align-items:center;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .screen.active{display:flex}
 
 /* Kontener kart */
-.deck{position:relative;width:92vw;max-width:420px;height:58vh;max-height:700px;flex-shrink:0}
+.deck{position:relative;width:92vw;max-width:420px;flex:1;min-height:0;max-height:700px}
 /* Styl kart */
 .card {
   position: absolute;
@@ -141,9 +141,15 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
 .topbar{width:92vw;max-width:420px;display:flex;justify-content:space-between;align-items:center;padding:0 0 6px 0;box-sizing:border-box;flex-shrink:0}
 .topbar h1{margin:0;font-size:18px}
 
-/* ---- Dolna nawigacja ---- */
+/* ---- Dolna nawigacja ----
+   Celowo NIE position:fixed: na iOS Safari elementy fixed kotwiczą się do
+   "layout viewportu", który nie kurczy się razem z klawiaturą ekranową —
+   pasek zostawałby w starym miejscu i albo znikał pod klawiaturą, albo
+   zostawiał pustą przestrzeń nad nią. Jako zwykłe ostatnie dziecko #app
+   (który ma realną, na bieżąco aktualizowaną wysokość przez --app-h) zawsze
+   ląduje dokładnie na dole aktualnie widocznego obszaru. */
 .bottomnav{
-  position:fixed;left:0;right:0;bottom:0;
+  width:100%;flex-shrink:0;
   height:var(--navh);box-sizing:border-box;
   display:flex;justify-content:center;align-items:flex-start;gap:0;
   background:rgba(255,255,255,0.92);
@@ -151,6 +157,7 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
   border-top:1px solid rgba(0,0,0,0.06);
   padding:8px 0 env(safe-area-inset-bottom) 0;
   z-index:50;
+  position:relative;
 }
 .navbtn{
   position:relative;
