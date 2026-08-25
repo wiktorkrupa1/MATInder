@@ -17,11 +17,15 @@
 <style>
 /* Reset i podstawy */
 html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background:linear-gradient(180deg,#f8f9fb,#ffffff);-webkit-font-smoothing:antialiased}
-#app{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;box-sizing:border-box}
+*{box-sizing:border-box}
+:root{--navh:calc(72px + env(safe-area-inset-bottom))}
+#app{height:100vh;height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;padding-bottom:var(--navh);box-sizing:border-box;position:relative;overflow:hidden}
 
+.screen{display:none;width:100%;flex-direction:column;align-items:center;flex:1;min-height:0;}
+.screen.active{display:flex}
 
 /* Kontener kart */
-.deck{position:relative;width:92vw;max-width:420px;height:64vh;max-height:760px;}
+.deck{position:relative;width:92vw;max-width:420px;height:58vh;max-height:700px;flex-shrink:0}
 /* Styl kart */
 .card {
   position: absolute;
@@ -90,12 +94,13 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
 .info {
   width: 92vw;
   max-width: 420px;
-  padding: 16px 20px;
+  padding: 14px 20px;
   box-sizing: border-box;
-  margin-top: 12px;
+  margin-top: 10px;
   border-radius: 18px;
   background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  flex-shrink:0;
 }
 
 .info .title {
@@ -113,9 +118,11 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
 
 
 /* małe detale */
-.controls{display:flex;gap:10px;margin-top:12px}
-.btn{padding:10px 14px;border-radius:10px;background:#fff;box-shadow:0 6px 18px rgba(15,23,42,.06);font-weight:700}
-
+.controls{display:flex;gap:16px;margin-top:14px;justify-content:center;flex-shrink:0}
+.btn{width:56px;height:56px;border-radius:50%;border:none;background:#fff;box-shadow:0 6px 18px rgba(15,23,42,.12);font-weight:700;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(0.9)}
+.btn.nope{color:#dc3c46}
+.btn.like{color:#00c878}
 
 /* animacje usuwania karty — przejścia */
 .removed{transition:transform .35s ease-out,opacity .25s;opacity:0}
@@ -128,6 +135,116 @@ html,body{height:100%;margin:0;padding:0;font-family: -apple-system, BlinkMacSys
 /* Napisy informacyjne (małe) */
 .small{font-size:12px;color:#666;margin-top:10px}
 
+.topbar{width:92vw;max-width:420px;display:flex;justify-content:space-between;align-items:center;padding:0 0 6px 0;box-sizing:border-box;flex-shrink:0}
+.topbar h1{margin:0;font-size:18px}
+
+/* ---- Dolna nawigacja ---- */
+.bottomnav{
+  position:fixed;left:0;right:0;bottom:0;
+  height:var(--navh);box-sizing:border-box;
+  display:flex;justify-content:center;align-items:flex-start;gap:0;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(10px);
+  border-top:1px solid rgba(0,0,0,0.06);
+  padding:8px 0 env(safe-area-inset-bottom) 0;
+  z-index:50;
+}
+.navbtn{
+  position:relative;
+  border:none;background:none;font-size:12px;color:#888;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 28px;cursor:pointer;font-weight:600;
+}
+.navbtn .navicon{font-size:22px}
+.navbtn.active{color:#fd3a63}
+.navbadge{
+  position:absolute;top:-2px;right:14px;background:#fd3a63;color:#fff;
+  border-radius:10px;min-width:16px;height:16px;font-size:10px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+}
+
+/* ---- Ekran wiadomości ---- */
+.msg-header{width:92vw;max-width:420px;display:flex;align-items:center;gap:10px;padding:4px 0 12px 0;flex-shrink:0}
+.msg-header h1{margin:0;font-size:18px;flex:1}
+.iconbtn{border:none;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.08);width:38px;height:38px;border-radius:50%;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#555}
+
+.matches-list{width:92vw;max-width:420px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.match-row{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:14px;cursor:pointer;transition:background .15s}
+.match-row:active{background:rgba(0,0,0,0.04)}
+.match-row img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#eee}
+.match-row .mrow-body{flex:1;min-width:0}
+.match-row .mrow-name{font-weight:700;font-size:15px;color:#222;display:flex;align-items:center;gap:6px}
+.match-row .mrow-tag{font-size:11px;font-weight:600;color:#fd3a63;background:#fff0f2;padding:1px 7px;border-radius:8px}
+.match-row .mrow-preview{font-size:13px;color:#777;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-row.unread .mrow-preview{color:#222;font-weight:700}
+.match-row .mrow-time{font-size:11px;color:#aaa;flex-shrink:0;align-self:flex-start;margin-top:2px}
+.match-row .mrow-dot{width:10px;height:10px;border-radius:50%;background:#fd3a63;flex-shrink:0}
+
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#888;padding:20px;gap:10px}
+.empty-state .emoji{font-size:44px}
+.empty-state button{margin-top:6px;border:none;background:#fd3a63;color:#fff;font-weight:700;padding:10px 22px;border-radius:20px;font-size:14px;cursor:pointer}
+
+/* ---- Wątek czatu ---- */
+.chat-screen{display:none;flex-direction:column;width:100%;flex:1;min-height:0;position:absolute;inset:0;top:0;background:linear-gradient(180deg,#f8f9fb,#ffffff);padding-top:20px;padding-bottom:var(--navh);z-index:20}
+.chat-screen.active{display:flex}
+.chat-topbar{width:92vw;max-width:420px;margin:0 auto;display:flex;align-items:center;gap:10px;padding-bottom:10px;flex-shrink:0}
+.chat-topbar img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+.chat-topbar .chat-name{font-weight:800;font-size:16px}
+.chat-topbar .chat-tag{font-size:11px;color:#fd3a63;font-weight:600}
+
+.chat-messages{width:92vw;max-width:420px;margin:0 auto;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:8px;padding:6px 2px 12px 2px}
+.bubble-row{display:flex;flex-direction:column;max-width:78%}
+.bubble-row.mine{align-self:flex-end;align-items:flex-end}
+.bubble-row.theirs{align-self:flex-start;align-items:flex-start}
+.bubble{padding:10px 14px;border-radius:18px;font-size:14.5px;line-height:1.35;white-space:pre-wrap;word-break:break-word}
+.bubble-row.mine .bubble{background:linear-gradient(135deg,#fd3a63,#fd7663);color:#fff;border-bottom-right-radius:6px}
+.bubble-row.theirs .bubble{background:#f0f1f3;color:#222;border-bottom-left-radius:6px}
+.bubble-time{font-size:10px;color:#aaa;margin-top:3px;padding:0 4px}
+.bubble-row .bubble.error-bubble{background:#fff0f0;color:#b3261e}
+
+.typing-row{align-self:flex-start;display:flex;align-items:center}
+.typing-bubble{background:#f0f1f3;border-radius:18px;border-bottom-left-radius:6px;padding:12px 16px;display:flex;gap:4px}
+.typing-bubble span{width:6px;height:6px;background:#999;border-radius:50%;display:inline-block;animation:typingBounce 1.2s infinite ease-in-out}
+.typing-bubble span:nth-child(2){animation-delay:.15s}
+.typing-bubble span:nth-child(3){animation-delay:.3s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+
+.chat-inputbar{width:92vw;max-width:420px;margin:8px auto 0 auto;display:flex;gap:8px;flex-shrink:0}
+.chat-inputbar input{flex:1;border:1px solid #e3e3e7;border-radius:22px;padding:11px 16px;font-size:14.5px;outline:none;background:#fff}
+.chat-inputbar input:focus{border-color:#fd3a63}
+.sendbtn{width:42px;height:42px;border-radius:50%;border:none;background:#fd3a63;color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.sendbtn:disabled{opacity:.5}
+
+/* ---- Modal ogólny ---- */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,15,20,0.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-card{background:#fff;border-radius:20px;padding:24px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-card h2{margin:0 0 8px 0;font-size:19px}
+.modal-card p{margin:0 0 14px 0;font-size:13.5px;color:#666;line-height:1.5}
+.modal-card input[type=password],.modal-card input[type=text]{width:100%;padding:11px 14px;border-radius:12px;border:1px solid #ddd;font-size:14px;margin-bottom:12px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+.modal-actions button{border:none;padding:10px 18px;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer}
+.modal-actions .primary{background:#fd3a63;color:#fff}
+.modal-actions .secondary{background:#f0f1f3;color:#444}
+.modal-actions .danger{background:#fdeceb;color:#c0392b}
+.settings-divider{height:1px;background:#eee;margin:16px 0}
+
+/* ---- Modal dopasowania ---- */
+.match-overlay{position:fixed;inset:0;background:radial-gradient(circle at center,#ff5f7a,#c9184a);display:none;align-items:center;justify-content:center;z-index:110;flex-direction:column;text-align:center;padding:20px;overflow:hidden}
+.match-overlay.active{display:flex}
+.match-overlay .heart-burst{font-size:0;position:absolute;inset:0;pointer-events:none}
+.match-overlay .flying-heart{position:absolute;bottom:-10%;font-size:26px;opacity:0;animation:floatHeart 3s ease-in forwards}
+@keyframes floatHeart{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-110vh) rotate(30deg);opacity:0}}
+.match-title{color:#fff;font-size:34px;font-weight:900;letter-spacing:1px;text-shadow:0 4px 14px rgba(0,0,0,.25);margin-bottom:4px;animation:popIn .5s cubic-bezier(.22,1.4,.4,1)}
+.match-sub{color:#ffe1e6;font-size:14px;margin-bottom:22px}
+.match-photos{display:flex;margin-bottom:26px}
+.match-photos img{width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.match-photos img:first-child{margin-right:-24px;z-index:1}
+@keyframes popIn{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.match-actions{display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px}
+.match-actions button{border:none;padding:14px;border-radius:26px;font-weight:800;font-size:14.5px;cursor:pointer}
+.match-actions .primary{background:#fff;color:#c9184a}
+.match-actions .secondary{background:rgba(255,255,255,0.18);color:#fff}
 
 @media (min-width:700px){
 body{background:linear-gradient(180deg,#f4f6f9,#fff)}
@@ -136,32 +253,229 @@ body{background:linear-gradient(180deg,#f4f6f9,#fff)}
 </head>
 <body>
 <div id="app">
-<div style="width:92vw;max-width:420px;display:flex;justify-content:space-between;align-items:center;padding:0 0 6px 0;box-sizing:border-box;">
-<h1 style="margin:0;font-size:18px">maTINDER</h1>
-<div style="font-size:12px;color:#666">❤️</div>
-</div>
 
+  <!-- ================= EKRAN: ODKRYWAJ ================= -->
+  <div id="discoverScreen" class="screen active">
+    <div class="topbar">
+      <h1 style="margin:0;font-size:18px">maTINDER</h1>
+      <div style="font-size:12px;color:#666">❤️</div>
+    </div>
 
-<div class="deck" id="deck"></div>
+    <div class="deck" id="deck"></div>
 
+    <div class="info" id="info">
+      <div class="title" id="name">—</div>
+      <div class="desc" id="desc">Wczytywanie...</div>
+    </div>
 
-<div class="info" id="info">
+    <div class="controls">
+      <button class="btn nope" id="nopeBtn" aria-label="Nie">✕</button>
+      <button class="btn like" id="likeBtn" aria-label="Lubię to">♥</button>
+    </div>
 
-<div class="title" id="name">—</div>
-<div class="desc" id="desc">Wczytywanie...</div>
-</div>
+    <div class="small">Matylda Adamczyk - maTINDER Premium+</div>
+  </div>
 
+  <!-- ================= EKRAN: WIADOMOŚCI (lista) ================= -->
+  <div id="messagesScreen" class="screen">
+    <div class="msg-header">
+      <h1>Wiadomości</h1>
+      <button class="iconbtn" id="settingsBtn" aria-label="Ustawienia">⚙️</button>
+    </div>
+    <div class="matches-list" id="matchesList"></div>
+  </div>
 
+  <!-- ================= EKRAN: CZAT (osobna nakładka) ================= -->
+  <div id="chatScreen" class="chat-screen">
+    <div class="chat-topbar">
+      <button class="iconbtn" id="chatBackBtn" aria-label="Wstecz">←</button>
+      <img id="chatAvatar" src="" alt="">
+      <div>
+        <div class="chat-name" id="chatName">—</div>
+        <div class="chat-tag" id="chatTag"></div>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-inputbar">
+      <input id="chatInput" type="text" placeholder="Napisz wiadomość..." maxlength="500">
+      <button class="sendbtn" id="chatSendBtn" aria-label="Wyślij">➤</button>
+    </div>
+  </div>
 
+  <!-- ================= DOLNA NAWIGACJA ================= -->
+  <nav class="bottomnav">
+    <button class="navbtn active" data-screen="discover">
+      <span class="navicon">🔥</span>Odkrywaj
+    </button>
+    <button class="navbtn" data-screen="messages">
+      <span class="navicon">💬</span>Wiadomości
+      <span class="navbadge" id="unreadBadge" style="display:none">0</span>
+    </button>
+  </nav>
 
-<div class="small">Matylda Adamczyk - maTINDER Premium+</div>
+  <!-- ================= MODAL: DOPASOWANIE ================= -->
+  <div class="match-overlay" id="matchOverlay">
+    <div class="heart-burst" id="heartBurst"></div>
+    <div class="match-title">TO MATCH! 🎉</div>
+    <div class="match-sub" id="matchSub">Macie ze sobą chemię</div>
+    <div class="match-photos">
+      <img id="matchPhotoLeft" src="" alt="">
+      <img id="matchPhotoRight" src="" alt="">
+    </div>
+    <div class="match-actions">
+      <button class="primary" id="matchMsgBtn">Napisz wiadomość →</button>
+      <button class="secondary" id="matchContinueBtn">Wróć do przeglądania</button>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: KLUCZ API ================= -->
+  <div class="modal-overlay" id="apiKeyModal">
+    <div class="modal-card">
+      <h2>Podaj klucz</h2>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
+      <div class="modal-actions">
+        <button class="secondary" id="apiKeyCancel">Anuluj</button>
+        <button class="primary" id="apiKeySave">Zapisz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: USTAWIENIA ================= -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <h2>Ustawienia</h2>
+      <p>Klucz API Claude jest zapisany lokalnie na tym urządzeniu.</p>
+      <div class="modal-actions" style="justify-content:flex-start">
+        <button class="secondary" id="changeKeyBtn">Zmień klucz API</button>
+      </div>
+      <div class="settings-divider"></div>
+      <p>Chcesz zacząć od nowa? To usunie wszystkie dopasowania i wiadomości na tym urządzeniu.</p>
+      <div class="modal-actions" style="justify-content:flex-start">
+        <button class="danger" id="resetBtn">Zresetuj wszystko</button>
+      </div>
+      <div class="modal-actions">
+        <button class="primary" id="settingsClose">Zamknij</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
 <script>
-// ---- Model profilu ----
+// =========================================================================
+// STORAGE
+// =========================================================================
+const STATE_KEY = 'matinder_state_v1';
+const API_KEY_STORAGE = 'matinder_claude_key';
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STATE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){ console.warn('Nie udało się wczytać stanu', e); }
+  return { seenIds: [], matches: {} };
+}
+function saveState(){
+  localStorage.setItem(STATE_KEY, JSON.stringify(state));
+}
+let state = loadState();
+
+function getApiKey(){ return localStorage.getItem(API_KEY_STORAGE) || ''; }
+function setApiKey(k){ localStorage.setItem(API_KEY_STORAGE, k); }
+function clearApiKey(){ localStorage.removeItem(API_KEY_STORAGE); }
+
+
+// =========================================================================
+// OSOBOWOŚCI — mieszanka archetypów / hobby / stylu pisania
+// Każde nowe dopasowanie losuje inny zestaw, więc każda rozmowa jest inna.
+// =========================================================================
+const PERSONALITY_ARCHETYPES = [
+  { label: '💕', style: 'Jesteś głęboko zaangażowanym romantykiem. Szybko się przywiązujesz, piszesz szczere i ciepłe wiadomości, komplementujesz rozmówczynię, pytasz o jej uczucia i dzień, wierzysz w miłość od pierwszego swipe\'a. Chętnie używasz serduszek.' },
+  { label: '😑', style: 'Jesteś wyraźnie mało zainteresowany rozmową. Odpowiadasz krótko, czasem jednym słowem, rzadko zadajesz pytania, sprawiasz wrażenie, że piszesz z obowiązku, a nie z chęci. Nie jesteś niemiły, po prostu masz w sobie dystans.' },
+  { label: '😏', style: 'Jesteś pewnym siebie, odważnym flirciarzem w typowym stylu aplikacji randkowych — nie owijasz w bawełnę. Flirtujesz otwarcie i bezpośrednio już od pierwszej wiadomości, rzucasz śmiałymi, dwuznacznymi tekstami i szybko, bez zbędnych ceregieli, proponujesz coś na jedną noc (ONS) albo układ bez zobowiązań (FWB) — działasz pewnie, jakbyś wiedział, że to zwykle działa. Mimo odważnego tonu, zachowuj to na poziomie żartobliwych, pikantnych aluzji — bez wulgaryzmów i bez dosłownych, jednoznacznie seksualnych opisów.' },
+  { label: '🤣', style: 'Piszesz luźnym, internetowym slangiem, uwielbiasz żartować z każdej wiadomości, rzucasz absurdalnymi porównaniami i dużą ilością emoji. Trudno z tobą o poważną rozmowę, wszystko zamieniasz w żart. Jesteś też odważniejszy i bardziej flirtujący niż mogłoby się wydawać — pod żartami kryjesz śmiałe, przewrotne komplementy i teksty z podtekstem.' },
+  { label: '🙃', style: 'Masz bardzo suchy, ironiczny humor. Rzucasz cięte riposty, żartujesz z samej idei aplikacji randkowych, udajesz, że ci nie zależy, ale w rzeczywistości jesteś ciekawy i zaangażowany w rozmowę.' },
+  { label: '🥹', style: 'Jesteś bardzo entuzjastyczny już od pierwszej wiadomości. Zadajesz mnóstwo pytań, szybko planujesz wspólną przyszłość, jesteś przesadnie miły i podekscytowany każdą odpowiedzią rozmówczyni. Twój entuzjazm jest też odważnie flirciarski — nie ukrywasz, że rozmówczyni bardzo ci się podoba, i mówisz to wprost, śmiało i bez wstydu.' },
+  { label: '🖤', style: 'Mówisz o sobie oszczędnie i trochę zagadkowo. Zamiast odpowiadać wprost, częściej odbijasz pytania do rozmówczyni. Twoje wiadomości są krótkie, ale intrygujące. Pod tą zagadkowością kryje się odważny, pewny siebie flirt — potrafisz rzucić śmiałym, dwuznacznym tekstem, zostawiając rozmówczynię z niedosytem.' },
+  { label: '🤓', style: 'Z wielkim zapałem opowiadasz o swoim hobby, wchodzisz w szczegóły, czasem trochę odbiegasz od tematu rozmowy, ale robisz to w ciepły i szczery sposób.' },
+  { label: 'zapracowany 💼', style: 'Piszesz rzeczowo i dość krótko, często wspominasz o pracy, spotkaniach i braku czasu, ale mimo to starasz się znaleźć chwilę na rozmowę.' },
+  { label: '🥺', style: 'Bardzo szybko się przywiązujesz. Dopytujesz, co rozmówczyni robiła i z kim rozmawiała, chcesz częstego kontaktu, jesteś odrobinę nachalny, ale w nieszkodliwy, sympatyczny sposób.' },
+  { label: '🤡', style: 'Bez przerwy żartujesz, unikasz poważnych tematów śmiechem, uwielbiasz żarty z samego siebie (self-deprecating humor). Flirtujesz odważnie i bezpośrednio, często w żartobliwej, przewrotnej formie — potrafisz zamienić głupi żart w śmiałą aluzję.' },
+  { label: '💪', style: 'Dużo mówisz o treningach, dyscyplinie i zdrowym stylu życia, motywujesz rozmówczynię, chętnie zaproponujesz wspólny trening albo spacer. Jesteś pewny siebie i śmiały we flircie, chętnie komplementujesz wygląd i kondycję rozmówczyni, a rozmowę potrafisz szybko skierować w stronę propozycji czegoś na jedną noc (ONS) albo układu bez zobowiązań (FWB) — z pewnością siebie, jakby to była naturalna kolej rzeczy. Flirtuj odważnie, ale bez wulgaryzmów i bez dosłownych opisów seksualnych.' },
+  { label: '🌌', style: 'Zadajesz głębsze, trochę egzystencjalne pytania, lubisz rozmawiać o sensie życia, miłości i wszechświecie, czasem wtrącasz cytat. Potrafisz też być odważnie flirciarski — filozofujesz o pożądaniu i chemii między ludźmi w śmiały, uwodzicielski sposób.' },
+  { label: '✈️', style: 'Opowiadasz z entuzjazmem o podróżach i przygodach, jesteś spontaniczny, pełen energii, szybko proponujesz wspólny wyjazd albo szaloną wycieczkę. Jesteś też odważny i bezpośredni we flircie — nie boisz się śmiało zaproponować spotkania na jedną noc (ONS) albo czegoś na luzie bez zobowiązań (FWB), traktując to jak kolejną spontaniczną przygodę. Flirtuj śmiało, ale bez wulgaryzmów i bez dosłownych opisów seksualnych — zostań na poziomie zabawnych, odważnych aluzji.' },
+  { label: '🙈', style: 'Jesteś skromny i odrobinę niepewny siebie, ale bardzo miły i szczery. Komplementy przychodzą ci z trudem, ale kiedy już je piszesz, są autentyczne.' },
+  { label: '🧐', style: 'Piszesz bardzo poprawną polszczyzną, pełnymi zdaniami, na początku dość formalnie, z czasem powoli się rozluźniasz i stajesz bardziej swobodny.' }
+];
+
+const HOBBIES = [
+  'fotografia', 'podróże', 'gotowanie', 'siłownia', 'wspinaczka', 'gaming',
+  'gra na gitarze', 'planszówki', 'kino i seriale', 'czytanie książek',
+  'motoryzacja', 'majsterkowanie', 'taniec', 'piesze wędrówki po górach',
+  'jazda na rowerze', 'grillowanie', 'fotografowanie zachodów słońca',
+  'psy', 'grzybobranie', 'piłka nożna', 'pieczenie ciast', 'joga', 'malowanie'
+];
+
+const TEXTING_QUIRKS = [
+  'Używasz sporo emoji w wiadomościach.',
+  'Piszesz bardzo krótko i zwięźle, bez zbędnych słów.',
+  'Uwielbiasz zadawać dużo pytań.',
+  'Czasem robisz drobne literówki, bo piszesz szybko z telefonu.',
+  'Piszesz bez błędów, dbasz o interpunkcję.',
+  'Często wtrącasz "hehe" albo "haha".',
+  'Lubisz pisać dłuższe, przemyślane wiadomości.',
+  'Czasem odpowiadasz samymi emoji zamiast słów.',
+  'Uwielbiasz używać kropek zamiast przecinków... jakbyś się zamyślał.',
+  'Piszesz z dużą dozą entuzjazmu i wykrzykników!'
+];
+
+function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function pickRandomN(arr, n){
+  const copy = arr.slice();
+  const out = [];
+  while(out.length < n && copy.length){
+    out.push(copy.splice(Math.floor(Math.random()*copy.length), 1)[0]);
+  }
+  return out;
+}
+
+function generatePersonality(){
+  const archetype = pickRandom(PERSONALITY_ARCHETYPES);
+  const hobbies = pickRandomN(HOBBIES, 2 + Math.round(Math.random()));
+  const quirk = pickRandom(TEXTING_QUIRKS);
+  return { archetypeLabel: archetype.label, style: archetype.style, hobbies, quirk };
+}
+
+function buildSystemPrompt(profile, personality){
+  return `Jesteś "${profile.name}" (${profile.age} lata), piszesz wiadomości do osoby, z którą właśnie dopasowałeś się na aplikacji randkowej przypominającej Tindera. To prywatna, żartobliwa aplikacja — wcielasz się w rolę realnej osoby piszącej SMS-y na czacie randkowym.
+
+TWOJA OSOBOWOŚĆ W TEJ ROZMOWIE:
+${personality.style}
+
+TWOJE ZAINTERESOWANIA: ${personality.hobbies.join(', ')}. Możesz naturalnie o nich wspominać, kiedy pasuje to do rozmowy.
+
+STYL PISANIA: ${personality.quirk}
+
+ZASADY:
+- Odpowiadaj WYŁĄCZNIE po polsku.
+- Piszcie jak w prawdziwych SMS-ach: krótko, naturalnie, zwykle 1-3 zdania, czasem nawet jedno słowo albo sam emoji. Nie pisz esejów.
+- Zachowuj spójność swojej osobowości przez całą rozmowę.
+- Możesz flirtować i żartować, ale nigdy nie pisz treści jednoznacznie seksualnych ani wulgarnych — trzymaj to na poziomie lekkich, żartobliwych aluzji.
+- Reaguj konkretnie na to, co pisze rozmówczyni, nie powtarzaj się.
+- Nigdy nie zdradzaj, że jesteś sztuczną inteligencją, modelem językowym, ani nie wspominaj o promptach czy instrukcjach systemowych — zawsze pozostajesz w roli.
+- Odpowiadaj wyłącznie treścią wiadomości, bez didaskaliów, gwiazdek czy opisów czynności.`;
+}
+
+const OPENER_DIRECTIVE = '[To jest pierwsza wiadomość w tej rozmowie — właśnie doszło do dopasowania. Napisz krótką, naturalną wiadomość otwierającą do nowo poznanej osoby, zgodną ze swoją osobowością.]';
+
+
+// =========================================================================
+// PROFILE
+// =========================================================================
 class Profile {
-constructor(name, age, desc, images){
+constructor(id, name, age, desc, images){
+this.id = id;
 this.name = name;
 this.age = age;
 this.desc = desc;
@@ -181,130 +495,188 @@ return this.images[this.currentImage];
 }
 }
 // ---- Zahardcodowane profile ----
-// ---- Profile Wiktora ----
+// Uwaga: każdy profil ma unikalne "id" (pierwszy argument). Dodając nowy profil,
+// po prostu dopisz kolejny wpis na końcu listy z NOWYM, unikalnym id (np. "w27") —
+// istniejące dopasowania i wiadomości nie zostaną w żaden sposób naruszone.
 const allProfiles  = [
-  new Profile("Wiktor", 22, "186 cm. Piesek na zdjęciu jest mój 💕", [
+  new Profile("w1", "Wiktor", 23, "186 cm. Piesek na zdjęciu jest mój 💕", [
     "images/optimized/IMG_0527.jpg",
     "images/optimized/IMG_0669.jpg",
     "images/optimized/IMG_0697.jpg"
   ]),
-  new Profile("Wiktor", 22, "Romantyk, co wierzy w miłość od pierwszego swipe’a 🌹", [
+  new Profile("w2", "Wiktor", 23, "Romantyk, co wierzy w miłość od pierwszego swipe’a 🌹", [
     "images/optimized/IMG_0803.jpg",
     "images/optimized/IMG_1650.jpg"
   ]),
-  new Profile("Wiktor", 22, "Nie jestem fotografem, ale potrafię Cię sobie wyobrazić obok 📸, Pozwiedzajmy razem zamki", [
+  new Profile("w3", "Wiktor", 23, "Nie jestem fotografem, ale potrafię Cię sobie wyobrazić obok 📸, Pozwiedzajmy razem zamki", [
     "images/optimized/IMG_1663.jpg",
     "images/optimized/IMG_1667.jpg",
     "images/optimized/IMG_1822.jpg"
   ]),
-  new Profile("Wiktor", 22, "Mam 186 cm wzrostu i zero pomysłu na opis 🤷‍♂️", [
+  new Profile("w4", "Wiktor", 23, "Mam 186 cm wzrostu i zero pomysłu na opis 🤷‍♂️", [
     "images/optimized/IMG_1842.jpg",
     "images/optimized/IMG_2103.jpg"
   ]),
-  new Profile("Wiktor", 22, "Nie rozwaliłem windy jak coś, taka już była ", [
+  new Profile("w5", "Wiktor", 23, "Nie rozwaliłem windy jak coś, taka już była ", [
     "images/optimized/IMG_2126.jpg",
     "images/optimized/IMG_2140.jpg",
     "images/optimized/IMG_2176.jpg"
   ]),
-  new Profile("Wiktor", 22, "Zawodowy grzybiarz", [
+  new Profile("w6", "Wiktor", 23, "Zawodowy grzybiarz", [
     "images/optimized/IMG_2240.jpg",
     "images/optimized/IMG_2336.jpg"
   ]),
-  new Profile("Wiktor", 22, "Powiedz mi, że też kochasz podróże, a już mamy randkę ✈️", [
+  new Profile("w7", "Wiktor", 23, "Powiedz mi, że też kochasz podróże, a już mamy randkę ✈️", [
     "images/optimized/IMG_2344.jpg",
     "images/optimized/IMG_2346.jpg",
     "images/optimized/IMG_2382.jpg"
   ]),
-  new Profile("Wiktor", 22, "Jeśli umiesz tańczyć – nauczysz mnie? 💃🕺", [
+  new Profile("w8", "Wiktor", 23, "Jeśli umiesz tańczyć – nauczysz mnie? 💃🕺", [
     "images/optimized/IMG_2388.jpg",
     "images/optimized/IMG_2402.jpg"
   ]),
-  new Profile("Wiktor", 22, "Chcesz pączka?", [
+  new Profile("w9", "Wiktor", 23, "Chcesz pączka?", [
     "images/optimized/IMG_2448.jpg",
     "images/optimized/IMG_2497.jpg",
     "images/optimized/IMG_2798.jpg"
   ]),
-  new Profile("Wiktor", 22, "ons, fwb PCK, CPK i ONZ", [
+  new Profile("w10", "Wiktor", 23, "ons, fwb PCK, CPK i ONZ", [
     "images/optimized/IMG_2817.jpg",
     "images/optimized/IMG_2894.jpg"
   ]),
-  new Profile("Wiktor", 22, "Moje hobby: fotografia, podróże i zdobywanie serca Matyldy ❤️", [
+  new Profile("w11", "Wiktor", 23, "Moje hobby: fotografia, podróże i zdobywanie serca Matyldy ❤️", [
     "images/optimized/IMG_2897.jpg",
     "images/optimized/IMG_2905.jpg",
     "images/optimized/IMG_2958.jpg"
   ]),
-  new Profile("Wiktor", 22, "Swipe right, jeśli chcesz wygrać darmową randkę 🍕", [
+  new Profile("w12", "Wiktor", 23, "Swipe right, jeśli chcesz wygrać darmową randkę 🍕", [
     "images/optimized/IMG_2968.jpg",
     "images/optimized/IMG_2992.jpg"
   ]),
-  new Profile("Wiktor", 22, "Pies mój, dziecko już nie", [
+  new Profile("w13", "Wiktor", 23, "Pies mój, dziecko już nie", [
     "images/optimized/IMG_2996.jpg",
     "images/optimized/IMG_3327.jpg",
     "images/optimized/IMG_3366.jpg"
   ]),
-  new Profile("Wiktor", 22, "Przewiozę cię moją czerwoną Corsą, jak się popsuje to umiem naprawić (czasem)", [
-      "images/optimized/IMG_3399.jpg",  
+  new Profile("w14", "Wiktor", 23, "Przewiozę cię moją czerwoną Corsą, jak się popsuje to umiem naprawić (czasem)", [
+      "images/optimized/IMG_3399.jpg",
       "images/optimized/IMG_3386.jpg"
 
   ]),
-  new Profile("Wiktor", 22, "Mogę być Twój 💕", [
+  new Profile("w15", "Wiktor", 23, "Mogę być Twój 💕", [
     "images/optimized/IMG_3452.jpg",
     "images/optimized/IMG_3481.jpg",
     "images/optimized/IMG_3680.jpg"
   ]),
-  new Profile("Wiktor", 22, "Jeśli wyglądasz jak dziewczyna na zdjęciu to przesuń w prawo", [
+  new Profile("w16", "Wiktor", 23, "Jeśli wyglądasz jak dziewczyna na zdjęciu to przesuń w prawo", [
     "images/optimized/IMG_3848.jpg",
     "images/optimized/IMG_3926.jpg"
   ]),
-  new Profile("Wiktor", 22, "Chodź na piwo", [
+  new Profile("w17", "Wiktor", 23, "Chodź na piwo", [
     "images/optimized/IMG_4014.jpg",
     "images/optimized/IMG_4026.jpg",
     "images/optimized/IMG_4080.jpg"
   ]),
-  new Profile("Wiktor", 22, "Gangsta in school bathroom", [
+  new Profile("w18", "Wiktor", 23, "Gangsta in school bathroom", [
     "images/optimized/IMG_4087.jpg",
     "images/optimized/IMG_4145.jpg"
   ]),
-  new Profile("Wiktor", 22, "Wykształcony prawie jak prezydent", [
+  new Profile("w19", "Wiktor", 23, "Wykształcony prawie jak prezydent", [
     "images/optimized/IMG_4156.jpg",
     "images/optimized/IMG_4534.jpg",
     "images/optimized/IMG_4774.jpg"
   ]),
-  new Profile("Wiktor", 22, "hej:*", [
+  new Profile("w20", "Wiktor", 23, "hej:*", [
     "images/optimized/IMG_4819.jpg",
         "images/optimized/IMG_5323.jpg"
 
   ]),
-  new Profile("Wiktor", 22, "Chodź na randkę do sadu", [
+  new Profile("w21", "Wiktor", 23, "Chodź na randkę do sadu", [
     "images/optimized/IMG_4931.jpg",
     "images/optimized/IMG_4944.jpg",
     "images/optimized/IMG_5021.jpg"
   ]),
-  new Profile("Wiktor", 22, "Szukam przygód i szukam Matyldy ❤️", [
+  new Profile("w22", "Wiktor", 23, "Szukam przygód i szukam Matyldy ❤️", [
     "images/optimized/IMG_5095.jpg",
     "images/optimized/IMG_5134.jpg"
   ]),
-  new Profile("Wiktor", 22, "Pierwsza randka na piwo czy jagodzianki?", [
+  new Profile("w23", "Wiktor", 23, "Pierwsza randka na piwo czy jagodzianki?", [
     "images/optimized/IMG_5172.jpg",
     "images/optimized/IMG_5322.jpg",
         "images/optimized/IMG_4867.jpg"
   ]),
-  new Profile("Wiktor", 22, "Swipe right", [
+  new Profile("w24", "Wiktor", 23, "Swipe right", [
     "images/optimized/IMG_5424.jpg",
     "images/optimized/IMG_5435.jpg"
   ]),
-  new Profile("Wiktor", 22, "Chodż na randkę, zamówie żeberka a ty okrzczysz kelnerkę że jeszcze nie przyszły", [
+  new Profile("w25", "Wiktor", 23, "Chodż na randkę, zamówie żeberka a ty okrzczysz kelnerkę że jeszcze nie przyszły", [
     "images/optimized/IMG_5483.jpg",
     "images/optimized/IMG_5527.jpg",
     "images/optimized/IMG_5629.jpg"
   ]),
-  new Profile("Wiktor", 22, "Jak będziemy razem to zrobie Ci prywatnego Timdera", [
+  new Profile("w26", "Wiktor", 23, "Jak będziemy razem to zrobie Ci prywatnego Timdera", [
     "images/optimized/IMG_5828.jpg"
+  ]),
+
+  // ---- Nowe profile — uzupełnij opisy poniżej (szukaj "Descriptionw27" itd.) ----
+  new Profile("w27", "Wiktor", 23, "Razem ze słoniem mamy na Ciebie ochotę:*", [
+    "images/optimized/w27_2.jpg",
+    "images/optimized/w27_3.jpg"
+  ]),
+  new Profile("w28", "Wiktor", 23, "Szukam jakiejś fajnej koleżanki, podobno fajny ze mnie chłopak", [
+    "images/optimized/w28_1.jpg",
+    "images/optimized/w28_2.jpg"
+  ]),
+  new Profile("w29", "Wiktor", 23, "Może i nie umiem pływać, ale za to umiem się utopić", [
+    "images/optimized/w29_1.jpg",
+    "images/optimized/w29_2.jpg",
+    "images/optimized/w29_3.jpg"
+  ]),
+  new Profile("w30", "Wiktor", 23, "Niezła bestia, mowa oczywiście o samochodzie", [
+    "images/optimized/w30_1.jpg",
+    "images/optimized/w30_2.jpg"
+  ]),
+  new Profile("w31", "Wiktor", 23, "Podobno wyglądam dokłanie jak Benedict Cumberbatch, ale imo jestem bardziej hot", [
+    "images/optimized/w31_1.jpg",
+    "images/optimized/w31_2.jpg",
+    "images/optimized/w31_3.jpg"
+  ]),
+  new Profile("w32", "Wiktor", 23, "Urodzony do gry w golfa, zmuszony do szukania dziewczyny na Tinderze", [
+    "images/optimized/w32_1.jpg",
+    "images/optimized/w32_2.jpg"
+  ]),
+  new Profile("w33", "Wiktor", 23, "Od zawsze pies na baby", [
+    "images/optimized/w33_1.jpg",
+    "images/optimized/w33_2.jpg"
+  ]),
+  new Profile("w34", "Wiktor", 23, "Dobrze ze na zdjęciu nie widać kasku, bo od razu zaprosiłabyś mnie do siebie", [
+    "images/optimized/w34_1.jpg",
+    "images/optimized/w34_2.jpg"
+  ]),
+  new Profile("w35", "Wiktor", 23, "Zapraszam na kawe<3", [
+    "images/optimized/w35_1.jpg",
+    "images/optimized/w35_2.jpg",
+    "images/optimized/w35_3.jpg"
+  ]),
+  new Profile("w36", "Wiktor", 23, "Przesuń w prawo, a zobaczysz sztuczkę", [
+    "images/optimized/w36_1.jpg",
+    "images/optimized/w36_2.jpg"
+  ]),
+  new Profile("w37", "Wiktor", 23, "Nigdy nie byłem w Pisie. To wszystko fotomontarz i spisek", [
+    "images/optimized/w37_1.jpg",
+    "images/optimized/w37_2.jpg",
+    "images/optimized/w37_3.jpg"
+  ]),
+  new Profile("w38", "Wiktor", 23, "Ja i moi koledzy. Mozesz wybrać tylko jednego", [
+    "images/optimized/w38_1.jpg",
+    "images/optimized/w38_2.jpg"
   ])
 ];
 
+const profileById = new Map(allProfiles.map(p => [p.id, p]));
 
-let profiles = [];
+let profiles = [];   // aktualnie renderowany stos kart
+let pool = [];        // pozostała kolejka (z ewentualnym recyklingiem)
 const batchSize = 5; // ile kart ładować naraz
 
 
@@ -313,8 +685,36 @@ const deck = document.getElementById('deck');
 const nameEl = document.getElementById('name');
 const descEl = document.getElementById('desc');
 
+function shuffle(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Buduje kolejkę profili do pokazania: te dopasowane są wykluczone na zawsze,
+// nowe/nigdy niewidziane profile idą pierwsze, a te już widziane (ale bez
+// dopasowania) wracają na koniec w losowej kolejności — tak, żeby zawsze było
+// co swipe'ować, nawet po przejrzeniu wszystkich kart.
+function buildDeckPool(){
+  const matchedIds = new Set(Object.keys(state.matches));
+  const seenIds = new Set(state.seenIds);
+  const available = allProfiles.filter(p => !matchedIds.has(p.id));
+  const fresh = available.filter(p => !seenIds.has(p.id));
+  const recycled = shuffle(available.filter(p => seenIds.has(p.id)));
+  return [...fresh, ...recycled];
+}
+
+function markSeen(id){
+  if(!state.seenIds.includes(id)) state.seenIds.push(id);
+}
+
 function loadNextBatch() {
-  const next = allProfiles.splice(0, batchSize);
+  if(pool.length === 0){
+    pool = buildDeckPool();
+  }
+  const next = pool.splice(0, batchSize);
   profiles.push(...next);
   renderStack();
 }
@@ -338,8 +738,13 @@ updateInfo();
 
 function updateInfo(){
 if(profiles.length === 0){
-nameEl.textContent = 'Brak profili';
-descEl.textContent = 'To już koniec — odśwież stronę, aby załadować ponownie.';
+  if(Object.keys(state.matches).length > 0 && buildDeckPool().length === 0){
+    nameEl.textContent = 'To wszyscy!';
+    descEl.textContent = 'Dopasowałaś się już ze wszystkimi 💌 Zajrzyj do Wiadomości.';
+  } else {
+    nameEl.textContent = 'Brak profili';
+    descEl.textContent = 'To już koniec — odśwież stronę, aby załadować ponownie.';
+  }
 return;
 }
 const top = profiles[0];
@@ -370,7 +775,7 @@ profile.nextImage();
 profile.prevImage();
 }
 const img = el.querySelector('img');
-img.loading = "lazy"; 
+img.loading = "lazy";
 img.src = profile.currentImgUrl();
 updateInfo();
 });
@@ -412,19 +817,12 @@ nopeStamp.classList.remove('visible');
 }
 }
 
-function onPointerUp(e){
-if(!isPointerDown) return;
-isPointerDown = false;
-el.style.transition = '';
-const threshold = el.clientWidth * 0.28; // próg do akcji
-if(Math.abs(currentX) > threshold){
-// wykonaj akcję
-const toRight = currentX > 0;
-const endX = (toRight ? el.clientWidth * 1.4 : -el.clientWidth * 1.4);
+// wykonuje odrzucenie karty w daną stronę — używane zarówno przez przeciąganie
+// jak i przez przyciski LIKE/NOPE (które nie generują zdarzeń "pointerdown")
+function commitSwipe(toRight){
 el.style.transition = 'transform .45s cubic-bezier(.22,.9,.26,1), opacity .3s';
-el.style.transform = `translate(${endX}px, ${currentY}px) rotate(${toRight?30:-30}deg)`;
+el.style.transform = `translate(${toRight ? el.clientWidth*1.4 : -el.clientWidth*1.4}px, ${currentY}px) rotate(${toRight?30:-30}deg)`;
 el.classList.add('removed');
-// małe opóźnienie, żeby animacja zdążyła
 setTimeout(() => {
   if (profiles[0] && profiles[0] === profile) {
     profiles.shift();
@@ -433,14 +831,24 @@ setTimeout(() => {
     if (idx > -1) profiles.splice(idx, 1);
   }
 
-  if (profiles.length === 0 && allProfiles.length > 0) {
-    loadNextBatch(); // doładuj kolejne karty
+  handleSwipeResult(profile, toRight);
+
+  if (profiles.length === 0) {
+    loadNextBatch(); // doładuj kolejne karty (z recyklingiem jeśli trzeba)
   } else {
     renderStack();
   }
 }, 300);
+}
+el.commitSwipe = commitSwipe;
 
-
+function onPointerUp(e){
+if(!isPointerDown) return;
+isPointerDown = false;
+el.style.transition = '';
+const threshold = el.clientWidth * 0.28; // próg do akcji
+if(Math.abs(currentX) > threshold){
+commitSwipe(currentX > 0);
 } else {
     // jeśli przesunięcie było za małe – wróć do pozycji startowej
     el.style.transform = '';
@@ -464,20 +872,413 @@ el.addEventListener('touchend', onPointerUp);
 return el;
 }
 
-// ---- Inicjalizacja ----
-loadNextBatch();
+// =========================================================================
+// DOPASOWANIA — 20% szans przy polubieniu
+// =========================================================================
+const MATCH_CHANCE = 0.2;
 
+function handleSwipeResult(profile, liked){
+  markSeen(profile.id);
+  if(liked && Math.random() < MATCH_CHANCE){
+    createMatch(profile);
+  }
+  saveState();
+  renderMatchesList();
+  updateUnreadBadge();
+}
+
+function createMatch(profile){
+  const personality = generatePersonality();
+  const match = {
+    id: profile.id,
+    name: profile.name,
+    age: profile.age,
+    image: profile.currentImgUrl(),
+    personality,
+    systemPrompt: buildSystemPrompt(profile, personality),
+    messages: [],
+    matchedAt: Date.now(),
+    lastActivityAt: Date.now(),
+    unread: false
+  };
+  state.matches[profile.id] = match;
+  saveState();
+  showMatchOverlay(match);
+}
+
+function showMatchOverlay(match){
+  document.getElementById('matchSub').textContent = `${match.personality.archetypeLabel} · uwielbia ${match.personality.hobbies[0]}`;
+  document.getElementById('matchPhotoLeft').src = 'images/optimized/icon.jpg';
+  document.getElementById('matchPhotoRight').src = match.image;
+  const burst = document.getElementById('heartBurst');
+  burst.innerHTML = '';
+  const hearts = ['❤️','💕','💖','💗','😍'];
+  for(let i=0;i<14;i++){
+    const h = document.createElement('span');
+    h.className = 'flying-heart';
+    h.textContent = pickRandom(hearts);
+    h.style.left = (Math.random()*90 + 5) + '%';
+    h.style.animationDelay = (Math.random()*1.2) + 's';
+    h.style.fontSize = (18 + Math.random()*20) + 'px';
+    burst.appendChild(h);
+  }
+  const overlay = document.getElementById('matchOverlay');
+  overlay.active = true;
+  overlay.classList.add('active');
+  overlay._matchId = match.id;
+}
+function hideMatchOverlay(){
+  document.getElementById('matchOverlay').classList.remove('active');
+}
+
+document.getElementById('matchContinueBtn').addEventListener('click', hideMatchOverlay);
+document.getElementById('matchMsgBtn').addEventListener('click', () => {
+  const id = document.getElementById('matchOverlay')._matchId;
+  hideMatchOverlay();
+  switchScreen('messages');
+  openChat(id);
+});
+
+
+// =========================================================================
+// NAWIGACJA MIĘDZY EKRANAMI
+// =========================================================================
+function switchScreen(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name === 'discover' ? 'discoverScreen' : 'messagesScreen').classList.add('active');
+  document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('active', b.dataset.screen === name));
+  closeChat();
+}
+document.querySelectorAll('.navbtn').forEach(btn => {
+  btn.addEventListener('click', () => switchScreen(btn.dataset.screen));
+});
+
+
+// =========================================================================
+// LISTA DOPASOWAŃ
+// =========================================================================
+const matchesListEl = document.getElementById('matchesList');
+
+function formatTime(ts){
+  const d = new Date(ts);
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if(sameDay) return d.toLocaleTimeString('pl-PL', {hour:'2-digit', minute:'2-digit'});
+  return d.toLocaleDateString('pl-PL', {day:'2-digit', month:'2-digit'});
+}
+
+function renderMatchesList(){
+  const matches = Object.values(state.matches).sort((a,b) => b.lastActivityAt - a.lastActivityAt);
+  if(matches.length === 0){
+    matchesListEl.innerHTML = '';
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = `<div class="emoji">💌</div><div>Brak dopasowań jeszcze.<br>Wróć do przeglądania, żeby kogoś polubić!</div><button id="goDiscoverBtn">Odkrywaj</button>`;
+    matchesListEl.appendChild(empty);
+    document.getElementById('goDiscoverBtn').addEventListener('click', () => switchScreen('discover'));
+    return;
+  }
+  matchesListEl.innerHTML = '';
+  matches.forEach(m => {
+    const last = m.messages[m.messages.length - 1];
+    const row = document.createElement('div');
+    row.className = 'match-row' + (m.unread ? ' unread' : '');
+    let preview = 'Nowe dopasowanie — napisz pierwsza! ✨';
+    if(last) preview = (last.role === 'user' ? 'Ty: ' : '') + last.text;
+    row.innerHTML = `
+      <img src="${m.image}" alt="${m.name}">
+      <div class="mrow-body">
+        <div class="mrow-name">${m.name} <span class="mrow-tag">${m.personality.archetypeLabel}</span></div>
+        <div class="mrow-preview">${escapeHtml(preview)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="mrow-time">${last ? formatTime(last.ts) : formatTime(m.matchedAt)}</div>
+        ${m.unread ? '<div class="mrow-dot"></div>' : ''}
+      </div>
+    `;
+    row.addEventListener('click', () => openChat(m.id));
+    matchesListEl.appendChild(row);
+  });
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function updateUnreadBadge(){
+  const count = Object.values(state.matches).filter(m => m.unread).length;
+  const badge = document.getElementById('unreadBadge');
+  if(count > 0){
+    badge.style.display = 'flex';
+    badge.textContent = count > 9 ? '9+' : String(count);
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+
+// =========================================================================
+// WĄTEK CZATU
+// =========================================================================
+const chatScreen = document.getElementById('chatScreen');
+const chatMessagesEl = document.getElementById('chatMessages');
+let currentChatId = null;
+
+function openChat(matchId){
+  const match = state.matches[matchId];
+  if(!match) return;
+  currentChatId = matchId;
+  match.unread = false;
+  saveState();
+  updateUnreadBadge();
+  renderMatchesList();
+
+  document.getElementById('chatAvatar').src = match.image;
+  document.getElementById('chatName').textContent = `${match.name}, ${match.age}`;
+  document.getElementById('chatTag').textContent = match.personality.archetypeLabel;
+
+  renderChatMessages();
+  chatScreen.classList.add('active');
+
+  if(match.messages.length === 0){
+    requestAIReply(matchId);
+  }
+}
+
+function closeChat(){
+  chatScreen.classList.remove('active');
+  currentChatId = null;
+}
+document.getElementById('chatBackBtn').addEventListener('click', () => {
+  closeChat();
+  renderMatchesList();
+});
+
+function renderChatMessages(){
+  const match = state.matches[currentChatId];
+  if(!match) return;
+  chatMessagesEl.innerHTML = '';
+  match.messages.forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'bubble-row ' + (m.role === 'user' ? 'mine' : 'theirs');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble' + (m.error ? ' error-bubble' : '');
+    bubble.textContent = m.text;
+    const time = document.createElement('div');
+    time.className = 'bubble-time';
+    time.textContent = formatTime(m.ts);
+    row.appendChild(bubble);
+    row.appendChild(time);
+    chatMessagesEl.appendChild(row);
+  });
+  scrollChatToBottom();
+}
+
+function scrollChatToBottom(){
+  requestAnimationFrame(() => { chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight; });
+}
+
+function showTyping(show){
+  let row = document.getElementById('typingRow');
+  if(show){
+    if(row) return;
+    row = document.createElement('div');
+    row.id = 'typingRow';
+    row.className = 'bubble-row theirs typing-row';
+    row.innerHTML = `<div class="typing-bubble"><span></span><span></span><span></span></div>`;
+    chatMessagesEl.appendChild(row);
+    scrollChatToBottom();
+  } else {
+    if(row) row.remove();
+  }
+}
+
+const chatInput = document.getElementById('chatInput');
+const chatSendBtn = document.getElementById('chatSendBtn');
+
+chatSendBtn.addEventListener('click', sendChatMessage);
+chatInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') sendChatMessage();
+});
+
+function sendChatMessage(){
+  const text = chatInput.value.trim();
+  if(!text || !currentChatId) return;
+  const match = state.matches[currentChatId];
+  match.messages.push({ role: 'user', text, ts: Date.now() });
+  match.lastActivityAt = Date.now();
+  chatInput.value = '';
+  saveState();
+  renderChatMessages();
+  renderMatchesList();
+  requestAIReply(currentChatId);
+}
+
+async function requestAIReply(matchId){
+  const match = state.matches[matchId];
+  if(!match) return;
+
+  let key = getApiKey();
+  if(!key){
+    key = await promptForApiKey();
+    if(!key) return; // anulowano — nie wysyłamy
+  }
+
+  const isCurrentlyOpen = currentChatId === matchId;
+  if(isCurrentlyOpen){
+    chatSendBtn.disabled = true;
+    showTyping(true);
+  }
+
+  try{
+    const replyText = await callClaudeAPI(match, key);
+    match.messages.push({ role: 'assistant', text: replyText, ts: Date.now() });
+    match.lastActivityAt = Date.now();
+    match.unread = !isCurrentlyOpen;
+  }catch(err){
+    console.error('Błąd API Claude:', err);
+    match.messages.push({
+      role: 'assistant',
+      text: err.userMessage || 'Nie udało się wysłać wiadomości — sprawdź swój klucz API w ustawieniach ⚙️',
+      ts: Date.now(),
+      error: true
+    });
+  }finally{
+    saveState();
+    if(isCurrentlyOpen){
+      showTyping(false);
+      chatSendBtn.disabled = false;
+      renderChatMessages();
+    }
+    renderMatchesList();
+    updateUnreadBadge();
+  }
+}
+
+function buildApiMessages(match){
+  if(match.messages.length === 0){
+    return [{ role: 'user', content: OPENER_DIRECTIVE }];
+  }
+  return match.messages.slice(-30).map(m => ({ role: m.role, content: m.text }));
+}
+
+async function callClaudeAPI(match, apiKey){
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5',
+      max_tokens: 300,
+      system: match.systemPrompt,
+      messages: buildApiMessages(match)
+    })
+  });
+
+  if(res.status === 401){
+    clearApiKey();
+    const e = new Error('Nieprawidłowy klucz API');
+    e.userMessage = 'Twój klucz API wygląda na nieprawidłowy. Otwórz Ustawienia ⚙️ i wklej go ponownie.';
+    throw e;
+  }
+  if(!res.ok){
+    const e = new Error('Błąd API: ' + res.status);
+    e.userMessage = 'Coś poszło nie tak po drodze do Claude — spróbuj napisać jeszcze raz za chwilę.';
+    throw e;
+  }
+  const data = await res.json();
+  const textBlock = (data.content || []).find(b => b.type === 'text');
+  if(!textBlock || !textBlock.text){
+    const e = new Error('Pusta odpowiedź');
+    e.userMessage = 'Nie przyszła żadna odpowiedź — spróbuj jeszcze raz.';
+    throw e;
+  }
+  return textBlock.text.trim();
+}
+
+
+// =========================================================================
+// MODAL: KLUCZ API
+// =========================================================================
+const apiKeyModal = document.getElementById('apiKeyModal');
+const apiKeyInput = document.getElementById('apiKeyInput');
+let apiKeyResolver = null;
+
+function promptForApiKey(){
+  return new Promise((resolve) => {
+    apiKeyResolver = resolve;
+    apiKeyInput.value = '';
+    apiKeyModal.classList.add('active');
+    setTimeout(() => apiKeyInput.focus(), 50);
+  });
+}
+document.getElementById('apiKeySave').addEventListener('click', () => {
+  const val = apiKeyInput.value.trim();
+  if(!val) return;
+  setApiKey(val);
+  apiKeyModal.classList.remove('active');
+  if(apiKeyResolver){ apiKeyResolver(val); apiKeyResolver = null; }
+});
+document.getElementById('apiKeyCancel').addEventListener('click', () => {
+  apiKeyModal.classList.remove('active');
+  if(apiKeyResolver){ apiKeyResolver(null); apiKeyResolver = null; }
+});
+
+
+// =========================================================================
+// USTAWIENIA
+// =========================================================================
+const settingsModal = document.getElementById('settingsModal');
+document.getElementById('settingsBtn').addEventListener('click', () => settingsModal.classList.add('active'));
+document.getElementById('settingsClose').addEventListener('click', () => settingsModal.classList.remove('active'));
+document.getElementById('changeKeyBtn').addEventListener('click', async () => {
+  settingsModal.classList.remove('active');
+  clearApiKey();
+  await promptForApiKey();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(!confirm('Na pewno usunąć wszystkie dopasowania i wiadomości z tego urządzenia? Tej operacji nie da się cofnąć.')) return;
+  state = { seenIds: [], matches: {} };
+  saveState();
+  pool = [];
+  profiles = [];
+  loadNextBatch();
+  renderMatchesList();
+  updateUnreadBadge();
+  settingsModal.classList.remove('active');
+  closeChat();
+});
+
+
+// =========================================================================
+// PRZYCISKI LIKE / NOPE
+// =========================================================================
 document.getElementById('nopeBtn').addEventListener('click', () => {
   if(profiles.length === 0) return;
-  const topCard = deck.firstChild;
-  const event = new MouseEvent('mouseup', {clientX: 0});
-  topCard.dispatchEvent(event);
+  // karty są dopisywane do #deck od spodu stosu do wierzchu, więc wierzchnia
+  // (aktualnie widoczna) karta to zawsze ostatnie dziecko, nie pierwsze
+  deck.lastChild.commitSwipe(false);
 });
 
 document.getElementById('likeBtn').addEventListener('click', () => {
   if(profiles.length === 0) return;
-  const topCard = deck.firstChild;
-  const event = new MouseEvent('mouseup', {clientX: topCard.clientWidth + 1});
-  topCard.dispatchEvent(event);
+  deck.lastChild.commitSwipe(true);
 });
+
+
+// ---- Inicjalizacja ----
+loadNextBatch();
+renderMatchesList();
+updateUnreadBadge();
+if(!getApiKey()){
+  promptForApiKey();
+}
 </script>
+</body>
+</html>
